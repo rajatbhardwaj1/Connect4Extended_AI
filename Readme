@@ -1,0 +1,31 @@
+notes 
+
+EXPECTIMAX
+
+observations 
+
+used only depth limited search --- getting 361 for ai and 100 for RA
+( depth = 3 ) (did depth = 4 , ai = 379 , RA = 101(seems to be 
+more focussed to increase its score rather than decreasing the other's score ) ... taking
+about 3-4 secs per move) for timebound ... keep updating best move ... maybe ... but seems to finish all the popout moves ..... 
+
+for n, m = 12 .... it takes 15 -17 secs per move ....for depth = 4 some cases time limit exceeded :(  ) ... need to do better ... go till atleast 5 or best case 6 
+
+
+
+improvemnts to make -- 
+
+1)use depth limited search 
+
+2)use a better heuristic function 
+
+3)use expecimax pruning 
+
+4)Recheck code for any possible bug that is decreasing efficiency .. unlikely but still check it 
+
+5) Can work with depth of 4 ti
+
+---------------------------------------------------------------------------------------
+MINIMAX 
+
+
