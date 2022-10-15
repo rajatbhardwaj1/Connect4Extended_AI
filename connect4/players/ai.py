@@ -33,22 +33,10 @@ class AIPlayer:
         scores -= curr_score 
         if current_depth > 0 :
             scores /= current_depth
-        
-
-
-
-        # if current_depth == 1 :
-        #     print(scores )
-
-        
-      
-
-        # valid_actions = get_valid_actions(player_number = self.player_number ,  state = state)
         valid_actions = [] 
         if maxi : 
             valid_actions = get_valid_actions(player_number = self.player_number ,  state = state)
-      
-
+    
 
             if len(valid_actions) > max_beam and (current_depth == 0 or current_depth == 1) : 
                 
@@ -59,11 +47,14 @@ class AIPlayer:
                         pop_moves.append(action)
                     else :
                         not_pop_move.append(action)
+                        #we will do a move on the left half space with more probability as dominating a half in expectimax proves to be more efficient.
+                        #we need to do an insert move in the non dominating half too so as to avoid enemy from scoring more
                 if left_right >=  6  and left_right <9:
                     not_pop_move.reverse() 
                 
-                    
-                temp = [] 
+                     
+                temp = [] #making a beam  with first few elements having popout = false and rest having popout = true 
+                #we will do a  popout move with 1/5 probability
                 if left_right != 9 and left_right != 0 :
                     for i in range (0 , max_beam - 4 // max(1 , current_depth)):
                         if i < len(not_pop_move):
@@ -71,22 +62,8 @@ class AIPlayer:
                             temp.append(not_pop_move[i])
                         else :
                             temp.append(valid_actions[i])
-                    
-                # random.shuffle(valid_actions)
-                # temp.append(valid_actions[0])
-
-               
                 
-                    # elif action[1] == False and i >= max_beam - 3 // max(1 , current_depth) :
-                    #     not_pop_move.append(action)
-                # random.shuffle(not_pop_move)
                 random.shuffle(pop_moves)
-                # pop_moves.reverse()
-
-               
-                
-                # if len(not_pop_move) > 0:
-                #     temp.append(not_pop_move[0])
 
                 for action in pop_moves:
                     temp.append(action)
@@ -97,32 +74,13 @@ class AIPlayer:
                     temp.append(not_pop_move[i])
                     i += 1 
                 valid_actions = temp
-            #     # print(valid_actions)
-            # random.shuffle(valid_actions)
-            
         else :
             
             valid_actions = get_valid_actions(player_number =(self.player_number +2)%3 + (self.player_number +1 ) %3 ,  state = state)
             random.shuffle(valid_actions) 
-        
-        # random.shuffle(valid_actions)
-        
-        # print(valid_actions)
-        
-        
-        
-
-        # if curr_score == 0 : 
-        #     scores  = scores - curr_score 
-        # else :
-        #     scores = (scores - curr_score )/ curr_score
-        #checking terminal condition 
+     
         if len(valid_actions) == 0 :
             return ( scores, (0 , True ))
-
-        #checking if max depth has reached 
-
-        #!!!!!!!!!!!!!!!!!! optimize / modify this ...... 
 
 
         if current_depth >= max_depth :
@@ -235,18 +193,7 @@ class AIPlayer:
 
         # temp = [] 
 
-        # window_ind = max(0 , last_action - max_beam // 2 )
-        # while window_ind < max_beam and window_ind < len(valid_actions) :
-        #     temp.append(valid_actions[window_ind])
-        #     window_ind += 1 
-        # valid_actions = temp
-
-
-
-        #checking if max depth has reached 
-
-        #!!!!!!!!!!!!!!!!!! optimize / modify this ...... 
-
+        
 
         if current_depth >= max_depth :
             return (scores, (0 , True ))
@@ -303,6 +250,7 @@ class AIPlayer:
                 new_scores , new_move = self.minimax((board , num_popouts) , current_depth + 1  , max_depth  , not maxi , curr_score  , end_time , alpha , beta , action[0])
                 if maxi : 
                     value = max( value , new_scores )
+                    #alpha - beta pruning ... helped to increase the search depth from 4 to 9
                     if value >= beta :
                         break
                     alpha = max( alpha , value )
@@ -311,6 +259,8 @@ class AIPlayer:
                         highest_score = new_scores 
                 else :
                     value = min(value , new_scores )
+                    
+                    #alpha - beta pruning ... helped to increase the search depth from 4 to 9
                     if value <= alpha:
                         # print('pruning !!!!')
                         break
@@ -355,12 +305,6 @@ class AIPlayer:
 
         end_time = time()  + self.time
         i = 3
-        # while(time() < end_time - 0.5):
-
-        #     new_score ,new_best    = self.expectimax(state , 0 , i , True , current_scores_enemy, end_time)
-        #     if score > new_score :
-        #         score = new_score
-        #         best_move = new_best 
             
 
 
@@ -369,8 +313,6 @@ class AIPlayer:
         scores , move = self.minimax(state , 0 , 5, True , current_scores, end_time , alpha , beta , -1 ) 
 
         return move
-        # Do the rest of your implementation here
-        # raise NotImplementedError('Whoops I don\'t know what to do')
 
     def get_expectimax_move(self, state: Tuple[np.array, Dict[int, Integer]]) -> Tuple[int, bool]:
         """
@@ -402,15 +344,6 @@ class AIPlayer:
 
         left_right = random.randint(0, 9)
 
-
-
-        # while(time() < end_time - 0.5):
-
-        #     new_score ,new_best = self.expectimax(state , 0 , i , True , current_scores, end_time , left_right)
-        #     i += 1
-            
-        #     if new_score != 10000000:
-        #         best_move = new_best 
             
         if left_right == 9 or left_right == 0 :
             print('popmove!!!')
